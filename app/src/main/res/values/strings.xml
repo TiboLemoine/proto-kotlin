@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">ProtoKot</string>
+
+    <!-- Main -->
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
+
+    <!-- Home -->
+    <string name="home_title">"Bienvenue à la bibliothèque de Glinin"</string>
+    <string name="home_book_button">"Consulter les livres"</string>
+    <string name="home_schedule">"Les horaires d'ouverture"</string>
+    <string name="home_loading">"Chargement des informations de la bibliothèque"</string>
+    <string name="home_error">"Impossible de récupérer les informations de la bibliothèque, veuillez réessayer plus tard"</string>
+    <string name="home_schedule_format">"%1$s - %2$s"</string>
+    <string name="home_schedule_unknown">"Non communiqué"</string>
+
+    <!-- Book list -->
+    <string name="book_borrow">"Emprunter"</string>
+    <string name="book_return">"Retourner"</string>
+    <string name="book_author_unknown">"Inconnu"</string>
+</resources>
