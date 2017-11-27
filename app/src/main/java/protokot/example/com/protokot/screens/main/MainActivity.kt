@@ -1,4 +1,4 @@
-package protokot.example.com.protokot.screens
+package protokot.example.com.protokot.screens.main
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -11,8 +11,8 @@ import android.support.v4.app.Fragment
 import android.support.v7.app.ActionBarDrawerToggle
 import android.view.View
 import protokot.example.com.protokot.R
-import protokot.example.com.protokot.screens.booklist.BookListFragment
-import protokot.example.com.protokot.screens.home.HomeFragment
+import protokot.example.com.protokot.screens.main.booklist.BookListFragment
+import protokot.example.com.protokot.screens.main.home.HomeFragment
 
 /**
  * Activity handling main content

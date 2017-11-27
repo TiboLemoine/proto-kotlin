@@ -1,4 +1,4 @@
-package protokot.example.com.protokot.screens.home
+package protokot.example.com.protokot.screens.main.home
 
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager

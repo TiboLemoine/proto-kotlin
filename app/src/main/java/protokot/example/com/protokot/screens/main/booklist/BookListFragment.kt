@@ -1,4 +1,4 @@
-package protokot.example.com.protokot.screens.booklist
+package protokot.example.com.protokot.screens.main.booklist
 
 import android.os.Bundle
 import android.support.v4.content.ContextCompat

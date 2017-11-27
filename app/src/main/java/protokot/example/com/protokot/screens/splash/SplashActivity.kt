@@ -2,9 +2,8 @@ package protokot.example.com.protokot.screens.splash
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.support.v7.app.AppCompatActivity
-import protokot.example.com.protokot.screens.MainActivity
+import protokot.example.com.protokot.screens.main.MainActivity
 
 /**
  * Activity handling splash screen

@@ -1,4 +1,4 @@
-package protokot.example.com.protokot.screens.booklist
+package protokot.example.com.protokot.screens.main.booklist
 
 /**
  * Object representing a book as showed in the list

@@ -1,4 +1,4 @@
-package protokot.example.com.protokot.screens.booklist
+package protokot.example.com.protokot.screens.main.booklist
 
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView

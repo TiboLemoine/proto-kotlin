@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".screens.MainActivity"
+        <activity android:name=".screens.main.MainActivity"
             android:screenOrientation="portrait"
             android:launchMode="singleTask" />
 

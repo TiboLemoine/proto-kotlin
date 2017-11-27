@@ -1,4 +1,4 @@
-package protokot.example.com.protokot.screens.home
+package protokot.example.com.protokot.screens.main.home
 
 /**
  * Object representing a library schedule
