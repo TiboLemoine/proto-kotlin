@@ -15,7 +15,7 @@ import protokot.example.com.protokot.R
 /**
  * Adapter class for book list
  */
-class BookListAdapter(var items : List<BookSummary>) : RecyclerView.Adapter<BookListAdapter.BookViewHolder>() {
+class BookListAdapter(var items : List<BookSummary>, val listener : BookListListener) : RecyclerView.Adapter<BookListAdapter.BookViewHolder>() {
 
     companion object {
         const val TYPE_BORROW = 0
@@ -33,7 +33,7 @@ class BookListAdapter(var items : List<BookSummary>) : RecyclerView.Adapter<Book
     }
 
     override fun onBindViewHolder(holder: BookListAdapter.BookViewHolder?, position: Int) {
-        holder?.bind(items[position])
+        holder?.bind(items[position], listener)
     }
 
     override fun getItemCount() = items.size
@@ -44,7 +44,7 @@ class BookListAdapter(var items : List<BookSummary>) : RecyclerView.Adapter<Book
 
     class BookViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        fun bind(book : BookSummary) {
+        fun bind(book : BookSummary, listener: BookListListener) {
             itemView.findViewById<TextView>(R.id.book_title)?.text = book.title
             itemView.findViewById<TextView>(R.id.book_author)?.text = book.authors
             if (book.image != null) {
@@ -58,6 +58,9 @@ class BookListAdapter(var items : List<BookSummary>) : RecyclerView.Adapter<Book
 
             val button : Button ? = itemView.findViewById<Button>(R.id.action_button)
             button?.text = book.buttonTitle
+
+            itemView.setOnClickListener{v -> listener.bookClicked(adapterPosition)}
+            button?.setOnClickListener{v -> listener.bookActionClicked(adapterPosition)}
         }
     }
 }

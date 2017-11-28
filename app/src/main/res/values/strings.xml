@@ -18,4 +18,9 @@
     <string name="book_borrow">"Emprunter"</string>
     <string name="book_return">"Retourner"</string>
     <string name="book_author_unknown">"Inconnu"</string>
+
+    <!-- Book detail -->
+    <string name="book_author">"Auteur"</string>
+    <string name="book_publish_date">"Date de parution"</string>
+    <string name="book_categories">"Catégories"</string>
 </resources>

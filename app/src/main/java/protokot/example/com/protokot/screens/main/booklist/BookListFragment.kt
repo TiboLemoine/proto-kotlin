@@ -1,5 +1,6 @@
 package protokot.example.com.protokot.screens.main.booklist
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.view.View
@@ -8,9 +9,11 @@ import protokot.example.com.protokot.screens.base.AbstractFragment
 import kotlinx.android.synthetic.main.fragment_book_list.*
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
+import android.widget.Toast
 import protokot.example.com.protokot.data.LibraryBook
 import protokot.example.com.protokot.network.ILibraryRetrofit
 import protokot.example.com.protokot.network.LibraryService
+import protokot.example.com.protokot.screens.bookdetail.BookDetailActivity
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -19,7 +22,7 @@ import java.util.concurrent.TimeUnit
 /**
  * Fragment handling book list screen
  */
-class BookListFragment : AbstractFragment() {
+class BookListFragment : AbstractFragment(), BookListListener {
 
     /**
      * Selected filter
@@ -29,7 +32,7 @@ class BookListFragment : AbstractFragment() {
     /**
      * Adapter for schedule list
      */
-    private var adapter: BookListAdapter? = null
+    private lateinit var adapter: BookListAdapter
 
     companion object {
         const val LIST_FILTER = 0
@@ -43,7 +46,7 @@ class BookListFragment : AbstractFragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = BookListAdapter(ArrayList())
+        adapter = BookListAdapter(ArrayList(), this)
 
         listButton.setOnClickListener { v ->
             filterValue = LIST_FILTER
@@ -63,6 +66,22 @@ class BookListFragment : AbstractFragment() {
 
     override fun getContentView() = R.layout.fragment_book_list
 
+    /**
+     * List interface methods
+     */
+    override fun bookClicked(position: Int) {
+        val book = adapter.items[position]
+
+        startActivity(BookDetailActivity.newIntent(context, book.id))
+    }
+
+    override fun bookActionClicked(position: Int) {
+        Toast.makeText(context, "Action button clicked", Toast.LENGTH_SHORT).show()
+    }
+
+    /**
+     * Network methods
+     */
     private fun getBookList() {
         swipeRefresh.isRefreshing = true
 
@@ -78,11 +97,14 @@ class BookListFragment : AbstractFragment() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnTerminate { swipeRefresh.isRefreshing = false }
                 .subscribe({ list ->
-                    adapter?.items = list
-                    adapter?.notifyDataSetChanged()
+                    adapter.items = list
+                    adapter.notifyDataSetChanged()
                 }, { e -> e.printStackTrace() })
     }
 
+    /**
+     * Other activity methods
+     */
     private fun updateButtonFilter() {
         if (filterValue == LIST_FILTER) {
             adapter?.isListView = true
@@ -102,6 +124,6 @@ class BookListFragment : AbstractFragment() {
     }
 
     private fun convertNetworkObjectToPojo(book: LibraryBook): BookSummary {
-        return BookSummary(book.title!!, book.author ?: getString(R.string.book_author_unknown), book.imagePath, false, getString(R.string.book_borrow))
+        return BookSummary(book.id, book.title!!, book.author ?: getString(R.string.book_author_unknown), book.imagePath, false, getString(R.string.book_borrow))
     }
 }

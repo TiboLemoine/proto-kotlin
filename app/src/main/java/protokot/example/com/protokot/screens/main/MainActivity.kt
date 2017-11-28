@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
         actionBarDrawerToggle.syncState()
     }
 
-    private fun changeFragment(fragment : Fragment?) {
+    private fun changeFragment(fragment: Fragment?) {
         if (fragment != null) {
             val transaction = supportFragmentManager.beginTransaction()
             transaction.replace(R.id.container, fragment)
