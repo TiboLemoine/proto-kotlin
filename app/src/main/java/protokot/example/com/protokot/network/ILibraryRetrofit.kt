@@ -2,7 +2,11 @@ package protokot.example.com.protokot.network
 
 import protokot.example.com.protokot.data.DaySchedule
 import protokot.example.com.protokot.data.LibraryBook
+import protokot.example.com.protokot.data.LogInRequest
+import protokot.example.com.protokot.data.LogInResponse
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 import rx.Observable
 
@@ -10,6 +14,9 @@ import rx.Observable
  * Interface for library services
  */
 interface ILibraryRetrofit {
+
+    @POST("ws/user/login")
+    fun logUserIn(@Body request : LogInRequest) : Observable<LogInResponse>
 
     @GET("ws/schedules")
     fun getSchedules() : Observable<List<DaySchedule>>

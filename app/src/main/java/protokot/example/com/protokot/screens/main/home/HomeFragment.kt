@@ -70,7 +70,7 @@ class HomeFragment : AbstractFragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        subscription?.let { subscription!!.unsubscribe() }
+        subscription?.let { it.unsubscribe() }
     }
 
     override fun getContentView() = R.layout.fragment_home

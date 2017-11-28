@@ -52,7 +52,7 @@ class BookDetailActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        subscription?.let { subscription!!.unsubscribe() }
+        subscription?.let { it.unsubscribe() }
     }
 
     private fun getBook(bookId: String) {

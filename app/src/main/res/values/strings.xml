@@ -1,6 +1,18 @@
 <resources>
     <string name="app_name">ProtoKot</string>
 
+    <!-- Login -->
+    <string name="login_title">"Connexion"</string>
+    <string name="field_login">"Identifiant (email)"</string>
+    <string name="field_password">"Mot de passe"</string>
+    <string name="login_log_in">"Connexion"</string>
+    <string name="create_account">"Créer un compte"</string>
+    <string name="error_login_empty">"Veuillez renseigner votre identifiant"</string>
+    <string name="error_login_format">"Veuillez vérifier votre identifiant, il ne semble pas s'agir d'un email"</string>
+    <string name="error_password_empty">"Veuillez renseigner votre mot de passe"</string>
+    <string name="login_running">"Authentification en cours"</string>
+    <string name="error_login">"Une erreur est survenue durant l'authentification, veuillez réessayer plus tard"</string>
+
     <!-- Main -->
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
@@ -24,4 +36,8 @@
     <string name="book_author">"Auteur"</string>
     <string name="book_publish_date">"Date de parution"</string>
     <string name="book_categories">"Catégories"</string>
+
+    <!-- Common -->
+    <string name="warning">"Avertissement</string>
+    <string name="button_ok">"OK</string>
 </resources>

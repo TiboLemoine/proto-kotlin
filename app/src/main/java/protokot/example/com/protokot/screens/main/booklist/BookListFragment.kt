@@ -77,8 +77,8 @@ class BookListFragment : AbstractFragment(), BookListListener, TabLayout.OnTabSe
 
     override fun onDestroyView() {
         super.onDestroyView()
-        subscription?.let { subscription!!.unsubscribe() }
-        catSubscription?.let { catSubscription!!.unsubscribe() }
+        subscription?.let { it.unsubscribe() }
+        catSubscription?.let { it.unsubscribe() }
     }
 
     override fun getContentView() = R.layout.fragment_book_list
@@ -120,7 +120,7 @@ class BookListFragment : AbstractFragment(), BookListListener, TabLayout.OnTabSe
     private fun getBookList() {
         swipeRefresh.isRefreshing = true
 
-        subscription?.let { subscription!!.unsubscribe() }
+        subscription?.let { it.unsubscribe() }
 
         val service = LibraryService("http://10.0.2.2:3000/", ILibraryRetrofit::class.java)
         subscription = service.serviceInstance.getBooks()
@@ -145,7 +145,7 @@ class BookListFragment : AbstractFragment(), BookListListener, TabLayout.OnTabSe
         adapter.items = ArrayList()
         adapter.notifyDataSetChanged()
 
-        subscription?.let { subscription!!.unsubscribe() }
+        subscription?.let { it.unsubscribe() }
 
         val service = LibraryService("http://10.0.2.2:3000/", ILibraryRetrofit::class.java)
         subscription = service.serviceInstance.getBooksForCat(cat)

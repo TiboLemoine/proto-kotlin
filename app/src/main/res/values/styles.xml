@@ -12,6 +12,12 @@
         <item name="android:windowBackground">@drawable/background_splash</item>
     </style>
 
+    <style name="EditTextStyle">
+        <item name="colorControlNormal">@android:color/white</item>
+        <item name="colorControlActivated">@color/colorAccent</item>
+        <item name="colorControlHighlight">@android:color/holo_blue_bright</item>
+    </style>
+
     <style name="PositiveButton">
         <item name="colorButtonNormal">@color/colorPrimary</item>
         <item name="colorControlHighlight">@color/colorPrimaryDark</item>
