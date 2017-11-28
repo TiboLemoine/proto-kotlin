@@ -45,7 +45,9 @@ class MainActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.home -> {
                     if (frag !is HomeFragment) {
-                        changeFragment(HomeFragment.newInstance())
+                        val fragment = HomeFragment.newInstance()
+                        fragment.listener = View.OnClickListener { v -> changeFragment(BookListFragment.newInstance()) }
+                        changeFragment(fragment)
                     }
                     drawerLayout?.closeDrawers()
                     return@OnNavigationItemSelectedListener true

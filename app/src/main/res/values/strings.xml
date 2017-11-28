@@ -15,6 +15,7 @@
     <string name="home_schedule_unknown">"Non communiqué"</string>
 
     <!-- Book list -->
+    <string name="book_cat_all">"Tout"</string>
     <string name="book_borrow">"Emprunter"</string>
     <string name="book_return">"Retourner"</string>
     <string name="book_author_unknown">"Inconnu"</string>

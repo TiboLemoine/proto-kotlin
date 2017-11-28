@@ -2,6 +2,7 @@ package protokot.example.com.protokot.screens.main.booklist
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.TabLayout
 import android.support.v4.content.ContextCompat
 import android.view.View
 import protokot.example.com.protokot.R
@@ -9,6 +10,7 @@ import protokot.example.com.protokot.screens.base.AbstractFragment
 import kotlinx.android.synthetic.main.fragment_book_list.*
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.widget.Toast
 import protokot.example.com.protokot.data.LibraryBook
 import protokot.example.com.protokot.network.ILibraryRetrofit
@@ -22,7 +24,7 @@ import java.util.concurrent.TimeUnit
 /**
  * Fragment handling book list screen
  */
-class BookListFragment : AbstractFragment(), BookListListener {
+class BookListFragment : AbstractFragment(), BookListListener, TabLayout.OnTabSelectedListener {
 
     /**
      * Selected filter
@@ -58,10 +60,12 @@ class BookListFragment : AbstractFragment(), BookListListener {
             updateButtonFilter()
         }
 
+        categoryTab.addOnTabSelectedListener(this)
+
         swipeRefresh.setOnRefreshListener { getBookList() }
 
         updateButtonFilter()
-        getBookList()
+        getCategories()
     }
 
     override fun getContentView() = R.layout.fragment_book_list
@@ -82,6 +86,25 @@ class BookListFragment : AbstractFragment(), BookListListener {
     /**
      * Network methods
      */
+    private fun getCategories() {
+        swipeRefresh.isRefreshing = true
+
+        val service = LibraryService("http://10.0.2.2:3000/", ILibraryRetrofit::class.java)
+        service.serviceInstance.getCategories()
+                .subscribeOn(Schedulers.io())
+                .map { list ->
+                    val completeList = ArrayList(list)
+                    completeList.add(0, getString(R.string.book_cat_all))
+
+                    return@map completeList
+                }
+                .flatMap { list -> Observable.from(list) }
+                .observeOn(AndroidSchedulers.mainThread())
+                .retry()
+                .subscribe({ cat -> categoryTab.addTab(categoryTab.newTab().setText(cat))
+                }, { e -> e.printStackTrace() }, {getBookList()})
+    }
+
     private fun getBookList() {
         swipeRefresh.isRefreshing = true
 
@@ -100,6 +123,48 @@ class BookListFragment : AbstractFragment(), BookListListener {
                     adapter.items = list
                     adapter.notifyDataSetChanged()
                 }, { e -> e.printStackTrace() })
+    }
+
+    private fun getBookListForCat(cat : String) {
+        swipeRefresh.isRefreshing = true
+
+        adapter.items = ArrayList()
+        adapter.notifyDataSetChanged()
+
+        val service = LibraryService("http://10.0.2.2:3000/", ILibraryRetrofit::class.java)
+        service.serviceInstance.getBooksForCat(cat)
+                .subscribeOn(Schedulers.io())
+                .delay(1, TimeUnit.SECONDS)
+                .map { l -> l.sortedWith(compareBy({ it.title })) }
+                .flatMap { l -> Observable.from(l) }
+                .filter { book -> book.title != null }
+                .map { book -> convertNetworkObjectToPojo(book) }
+                .toList()
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnTerminate { swipeRefresh.isRefreshing = false }
+                .subscribe({ list ->
+                    adapter.items = list
+                    adapter.notifyDataSetChanged()
+                }, { e -> e.printStackTrace() })
+    }
+
+    /**
+     * TabLayout callback
+     */
+    override fun onTabReselected(tab: TabLayout.Tab?) {
+        //Nothing to do here
+    }
+
+    override fun onTabUnselected(tab: TabLayout.Tab?) {
+        //Nothing to do here
+    }
+
+    override fun onTabSelected(tab: TabLayout.Tab?) {
+        if (tab?.text.toString() == (getString(R.string.book_cat_all))) {
+            getBookList()
+        } else {
+            getBookListForCat(tab?.text.toString())
+        }
     }
 
     /**

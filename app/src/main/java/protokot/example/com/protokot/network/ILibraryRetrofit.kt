@@ -14,8 +14,14 @@ interface ILibraryRetrofit {
     @GET("ws/schedules")
     fun getSchedules() : Observable<List<DaySchedule>>
 
+    @GET("ws/books/categories")
+    fun getCategories() : Observable<List<String>>
+
     @GET("ws/books")
     fun getBooks() : Observable<List<LibraryBook>>
+
+    @GET("ws/book/category/{categoryId}/")
+    fun getBooksForCat(@Path("categoryId") categoryId : String) : Observable<List<LibraryBook>>
 
     @GET("ws/book/{bookId}/")
     fun getBookFromId(@Path("bookId") bookId : String) : Observable<LibraryBook>
