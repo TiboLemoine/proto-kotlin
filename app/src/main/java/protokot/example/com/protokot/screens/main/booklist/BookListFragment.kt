@@ -41,6 +41,7 @@ class BookListFragment : AbstractFragment(), BookListListener, TabLayout.OnTabSe
      * Book list subscription
      */
     private var subscription : Subscription? = null
+    private var catSubscription : Subscription? = null
 
     companion object {
         const val LIST_FILTER = 0
@@ -77,6 +78,7 @@ class BookListFragment : AbstractFragment(), BookListListener, TabLayout.OnTabSe
     override fun onDestroyView() {
         super.onDestroyView()
         subscription?.let { subscription!!.unsubscribe() }
+        catSubscription?.let { catSubscription!!.unsubscribe() }
     }
 
     override fun getContentView() = R.layout.fragment_book_list
@@ -100,10 +102,8 @@ class BookListFragment : AbstractFragment(), BookListListener, TabLayout.OnTabSe
     private fun getCategories() {
         swipeRefresh.isRefreshing = true
 
-        subscription?.let { subscription!!.unsubscribe() }
-
         val service = LibraryService("http://10.0.2.2:3000/", ILibraryRetrofit::class.java)
-        subscription = service.serviceInstance.getCategories()
+        catSubscription = service.serviceInstance.getCategories()
                 .subscribeOn(Schedulers.io())
                 .map { list ->
                     val completeList = ArrayList(list)
@@ -114,8 +114,7 @@ class BookListFragment : AbstractFragment(), BookListListener, TabLayout.OnTabSe
                 .flatMap { list -> Observable.from(list) }
                 .observeOn(AndroidSchedulers.mainThread())
                 .retry()
-                .subscribe({ cat -> categoryTab.addTab(categoryTab.newTab().setText(cat))
-                }, { e -> e.printStackTrace() }, {getBookList()})
+                .subscribe({ cat -> categoryTab.addTab(categoryTab.newTab().setText(cat)) }, { e -> e.printStackTrace() }, {getBookList()})
     }
 
     private fun getBookList() {
