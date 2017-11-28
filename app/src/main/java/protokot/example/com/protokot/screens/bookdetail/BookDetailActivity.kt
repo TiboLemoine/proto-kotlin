@@ -3,7 +3,6 @@ package protokot.example.com.protokot.screens.bookdetail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import protokot.example.com.protokot.R
@@ -11,6 +10,7 @@ import kotlinx.android.synthetic.main.activity_book_detail.*
 import protokot.example.com.protokot.data.LibraryBook
 import protokot.example.com.protokot.network.ILibraryRetrofit
 import protokot.example.com.protokot.network.LibraryService
+import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import java.text.SimpleDateFormat
@@ -20,6 +20,11 @@ import java.util.*
  * Activity handling book detail screen
  */
 class BookDetailActivity : AppCompatActivity() {
+
+    /**
+     * Book list subscription
+     */
+    private var subscription : Subscription? = null
 
     companion object {
         const val BOOK_ID_KEY = "book_id_key"
@@ -45,9 +50,14 @@ class BookDetailActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        subscription?.let { subscription!!.unsubscribe() }
+    }
+
     private fun getBook(bookId: String) {
         val service = LibraryService("http://10.0.2.2:3000/", ILibraryRetrofit::class.java)
-        service.serviceInstance.getBookFromId(bookId)
+        subscription = service.serviceInstance.getBookFromId(bookId)
                 .subscribeOn(Schedulers.io())
                 .map { book -> convertNetworkObjectToPojo(book) }
                 .observeOn(AndroidSchedulers.mainThread())

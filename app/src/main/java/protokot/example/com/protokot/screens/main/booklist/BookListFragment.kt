@@ -17,6 +17,7 @@ import protokot.example.com.protokot.network.ILibraryRetrofit
 import protokot.example.com.protokot.network.LibraryService
 import protokot.example.com.protokot.screens.bookdetail.BookDetailActivity
 import rx.Observable
+import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
@@ -35,6 +36,11 @@ class BookListFragment : AbstractFragment(), BookListListener, TabLayout.OnTabSe
      * Adapter for schedule list
      */
     private lateinit var adapter: BookListAdapter
+
+    /**
+     * Book list subscription
+     */
+    private var subscription : Subscription? = null
 
     companion object {
         const val LIST_FILTER = 0
@@ -68,6 +74,11 @@ class BookListFragment : AbstractFragment(), BookListListener, TabLayout.OnTabSe
         getCategories()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        subscription?.let { subscription!!.unsubscribe() }
+    }
+
     override fun getContentView() = R.layout.fragment_book_list
 
     /**
@@ -89,8 +100,10 @@ class BookListFragment : AbstractFragment(), BookListListener, TabLayout.OnTabSe
     private fun getCategories() {
         swipeRefresh.isRefreshing = true
 
+        subscription?.let { subscription!!.unsubscribe() }
+
         val service = LibraryService("http://10.0.2.2:3000/", ILibraryRetrofit::class.java)
-        service.serviceInstance.getCategories()
+        subscription = service.serviceInstance.getCategories()
                 .subscribeOn(Schedulers.io())
                 .map { list ->
                     val completeList = ArrayList(list)
@@ -108,8 +121,10 @@ class BookListFragment : AbstractFragment(), BookListListener, TabLayout.OnTabSe
     private fun getBookList() {
         swipeRefresh.isRefreshing = true
 
+        subscription?.let { subscription!!.unsubscribe() }
+
         val service = LibraryService("http://10.0.2.2:3000/", ILibraryRetrofit::class.java)
-        service.serviceInstance.getBooks()
+        subscription = service.serviceInstance.getBooks()
                 .subscribeOn(Schedulers.io())
                 .delay(1, TimeUnit.SECONDS)
                 .map { l -> l.sortedWith(compareBy({ it.title })) }
@@ -131,8 +146,10 @@ class BookListFragment : AbstractFragment(), BookListListener, TabLayout.OnTabSe
         adapter.items = ArrayList()
         adapter.notifyDataSetChanged()
 
+        subscription?.let { subscription!!.unsubscribe() }
+
         val service = LibraryService("http://10.0.2.2:3000/", ILibraryRetrofit::class.java)
-        service.serviceInstance.getBooksForCat(cat)
+        subscription = service.serviceInstance.getBooksForCat(cat)
                 .subscribeOn(Schedulers.io())
                 .delay(1, TimeUnit.SECONDS)
                 .map { l -> l.sortedWith(compareBy({ it.title })) }

@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlinx.android.synthetic.main.fragment_home.*
+import rx.Subscription
 
 /**
  * Fragment handling home screen
@@ -33,6 +34,11 @@ class HomeFragment : AbstractFragment() {
      */
     var listener: View.OnClickListener? = null
 
+    /**
+     * Book list subscription
+     */
+    private var subscription : Subscription? = null
+
     companion object {
         fun newInstance(): HomeFragment {
             return HomeFragment()
@@ -50,7 +56,7 @@ class HomeFragment : AbstractFragment() {
 
         showLoader()
         val service = LibraryService("http://10.0.2.2:3000/", ILibraryRetrofit::class.java)
-        service.serviceInstance.getSchedules()
+        subscription = service.serviceInstance.getSchedules()
                 .subscribeOn(Schedulers.io())
                 .delay(1, TimeUnit.SECONDS)
                 .map { l -> l.sortedWith(compareBy({ it.dayNumber })) }
@@ -60,6 +66,11 @@ class HomeFragment : AbstractFragment() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnError { _ -> hideLoader(true) }
                 .subscribe({ day -> adapter?.addSchedule(day) }, { e -> e.printStackTrace() }, { hideLoader(false) })
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        subscription?.let { subscription!!.unsubscribe() }
     }
 
     override fun getContentView() = R.layout.fragment_home
