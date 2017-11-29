@@ -26,12 +26,9 @@ class LoginActivity : AppCompatActivity() {
     /**
      * Log in subscription
      */
-    private var subscription : Subscription? = null
+    private var subscription: Subscription? = null
 
     companion object {
-        const val digitPattern: String = "^(?=.*[0-9])$"
-        const val letterPattern: String = "^(?=.*[a-zA-Z])$"
-
         fun newIntent(context: Context): Intent = Intent(context, LoginActivity::class.java)
     }
 
@@ -40,6 +37,7 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         loginButton.setOnClickListener { v -> validateForm(loginField.text.toString(), passwordField.text.toString()) }
+        createAccountButton.setOnClickListener { v -> startActivity(CreateAccountActivity.newIntent(baseContext)) }
     }
 
     override fun onDestroy() {
@@ -49,8 +47,6 @@ class LoginActivity : AppCompatActivity() {
 
     private fun logUserIn(email: String, password: String) {
         showLoader()
-        loginField.isEnabled = false
-        passwordField.isEnabled = false
         loginButton.isEnabled = false
 
         val service = LibraryService("http://10.0.2.2:3000/", ILibraryRetrofit::class.java)
@@ -65,8 +61,11 @@ class LoginActivity : AppCompatActivity() {
                 }
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnTerminate { hideLoader() }
-                .doOnError { _ -> showError()}
-                .subscribe({ day -> Log.d("LOGIN","Success") }, { e -> e.printStackTrace() })
+                .doOnError { _ ->
+                    loginButton.isEnabled = true
+                    showError()
+                }
+                .subscribe({ response -> Log.d("LOGIN", "Success") }, { e -> e.printStackTrace() })
     }
 
     private fun validateForm(login: String, password: String) {
@@ -80,13 +79,7 @@ class LoginActivity : AppCompatActivity() {
             loginLayout.isErrorEnabled = false
             passwordLayout.isErrorEnabled = true
             passwordLayout.error = getString(R.string.error_password_empty)
-        } /*else if (password.trim().length < 8) {
-
-        } else if (Pattern.compile(digitPattern).matcher(password).matches()) {
-
-        } else if (Pattern.compile(letterPattern).matcher(password).matches()) {
-
-        }*/ else {
+        } else {
             loginLayout.isErrorEnabled = false
             passwordLayout.isErrorEnabled = false
             logUserIn(login, password)

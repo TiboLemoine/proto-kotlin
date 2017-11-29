@@ -15,7 +15,10 @@
     <style name="EditTextStyle">
         <item name="colorControlNormal">@android:color/white</item>
         <item name="colorControlActivated">@color/colorAccent</item>
-        <item name="colorControlHighlight">@android:color/holo_blue_bright</item>
+    </style>
+
+    <style name="EditTextErrorStyle">
+        <item name="android:textColor">@color/red</item>
     </style>
 
     <style name="PositiveButton">

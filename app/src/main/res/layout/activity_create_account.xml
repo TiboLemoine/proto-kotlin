@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:title="@string/creation_title"
+        app:titleTextColor="@android:color/white" />
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/firstnameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/small"
+        android:layout_marginStart="@dimen/small"
+        android:layout_marginTop="@dimen/small"
+        android:textColorHint="@android:color/white"
+        app:errorTextAppearance="@style/EditTextErrorStyle">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/firstnameField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/field_firstname"
+            android:inputType="text"
+            android:nextFocusDown="@+id/lastnameField"
+            android:textColor="@android:color/white"
+            android:theme="@style/EditTextStyle" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/lastnameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/small"
+        android:layout_marginStart="@dimen/small"
+        android:layout_marginTop="@dimen/small"
+        android:textColorHint="@android:color/white"
+        app:errorTextAppearance="@style/EditTextErrorStyle">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/lastnameField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/field_lasstname"
+            android:inputType="text"
+            android:nextFocusDown="@+id/loginField"
+            android:textColor="@android:color/white"
+            android:theme="@style/EditTextStyle" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/loginLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/small"
+        android:layout_marginStart="@dimen/small"
+        android:layout_marginTop="@dimen/small"
+        android:textColorHint="@android:color/white"
+        app:errorTextAppearance="@style/EditTextErrorStyle">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/loginField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/field_login"
+            android:inputType="text"
+            android:nextFocusDown="@+id/passwordField"
+            android:textColor="@android:color/white"
+            android:theme="@style/EditTextStyle" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/passwordLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/small"
+        android:layout_marginStart="@dimen/small"
+        android:layout_marginTop="@dimen/small"
+        android:textColorHint="@android:color/white"
+        app:errorTextAppearance="@style/EditTextErrorStyle">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/passwordField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/field_password"
+            android:imeOptions="actionDone"
+            android:inputType="textPassword"
+            android:textColor="@android:color/white"
+            android:theme="@style/EditTextStyle" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/confirmPasswordLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/small"
+        android:layout_marginStart="@dimen/small"
+        android:layout_marginTop="@dimen/small"
+        android:textColorHint="@android:color/white"
+        app:errorTextAppearance="@style/EditTextErrorStyle">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/confirmPasswordField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/field_password_confirm"
+            android:imeOptions="actionDone"
+            android:inputType="textPassword"
+            android:textColor="@android:color/white"
+            android:theme="@style/EditTextStyle" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <Button
+        android:id="@+id/validateButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/small"
+        android:text="@string/login_log_in"
+        android:textAllCaps="false"
+        android:theme="@style/NegativeButton" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:indeterminate="true"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/progressText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginEnd="@dimen/small"
+        android:layout_marginStart="@dimen/small"
+        android:text="@string/creation_running"
+        android:textColor="@color/colorAccent"
+        android:visibility="invisible" />
+
+</LinearLayout>
