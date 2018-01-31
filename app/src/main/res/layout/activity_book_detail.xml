@@ -140,6 +140,17 @@
 
             </android.support.v7.widget.CardView>
 
+            <Button
+                android:theme="@style/PositiveButton"
+                android:id="@+id/action_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginEnd="@dimen/medium"
+                android:layout_marginStart="@dimen/medium"
+                android:layout_marginTop="@dimen/small"
+                android:text="Emprunter" />
+
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>

@@ -5,14 +5,16 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import kotlinx.android.synthetic.main.activity_create_account.*
 import protokot.example.com.protokot.R
 import protokot.example.com.protokot.data.CreateUserRequest
+import protokot.example.com.protokot.data.SharedConstants
+import protokot.example.com.protokot.data.putString
 import protokot.example.com.protokot.network.ILibraryRetrofit
 import protokot.example.com.protokot.network.LibraryService
+import protokot.example.com.protokot.screens.main.MainActivity
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -71,7 +73,13 @@ class CreateAccountActivity : AppCompatActivity() {
                 .subscribeOn(Schedulers.io())
                 .flatMap { response ->
                     return@flatMap if (response.token != null && response.user != null) {
-                        Observable.just(response);
+                        val shared = baseContext.getSharedPreferences(SharedConstants.PREFERENCE_NAME, Context.MODE_PRIVATE)
+                        shared.putString(SharedConstants.FIRSTNAME_KEY, response.user.firstName)
+                        shared.putString(SharedConstants.LASTNAME_KEY, response.user.lastName)
+                        shared.putString(SharedConstants.EMAIL_KEY, response.user.email)
+                        shared.putString(SharedConstants.TOKEN_KEY, response.token)
+
+                        Observable.just(true)
                     } else {
                         Observable.error<Exception>(Exception("Error occured while creating user account"))
                     }
@@ -82,7 +90,10 @@ class CreateAccountActivity : AppCompatActivity() {
                     validateButton.isEnabled = true
                     showError()
                 }
-                .subscribe({ day -> Log.d("LOGIN", "Success") }, { e -> e.printStackTrace() })
+                .subscribe({ _ ->
+                    startActivity(MainActivity.newIntent(baseContext))
+                    finish()
+                }, { e -> e.printStackTrace() })
     }
 
     private fun validateForm(firstname: String, lastname: String, login: String, password: String, confirmPassword: String) {

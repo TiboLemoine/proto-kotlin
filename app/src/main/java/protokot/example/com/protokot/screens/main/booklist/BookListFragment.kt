@@ -1,5 +1,6 @@
 package protokot.example.com.protokot.screens.main.booklist
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.TabLayout
@@ -12,7 +13,11 @@ import android.support.v7.widget.StaggeredGridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.widget.Toast
+import com.google.android.gms.analytics.HitBuilders
+import com.google.firebase.analytics.FirebaseAnalytics
+import protokot.example.com.protokot.KotApp
 import protokot.example.com.protokot.data.LibraryBook
+import protokot.example.com.protokot.data.SharedConstants
 import protokot.example.com.protokot.network.ILibraryRetrofit
 import protokot.example.com.protokot.network.LibraryService
 import protokot.example.com.protokot.screens.bookdetail.BookDetailActivity
@@ -20,6 +25,7 @@ import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 /**
@@ -88,11 +94,51 @@ class BookListFragment : AbstractFragment(), BookListListener, TabLayout.OnTabSe
      */
     override fun bookClicked(position: Int) {
         val book = adapter.items[position]
+        val shared = context.getSharedPreferences(SharedConstants.PREFERENCE_NAME, Context.MODE_PRIVATE)
+
+        val firebase = FirebaseAnalytics.getInstance(context);
+        val bundle = Bundle()
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, book.title)
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "BookDetail")
+        bundle.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, "Navigation")
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Cell")
+        bundle.putString("author", book.authors)
+        firebase.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
+        Log.d("FA","Sending firebase event")
+
+        val application = activity.application as KotApp
+        application.getDefaultTracker().send(HitBuilders.EventBuilder()
+                .setCategory("Navigation")
+                .setAction("Cell")
+                .setLabel(book.title)
+                .set("author", book.authors)
+                .setCustomDimension(1, shared.getString(SharedConstants.EMAIL_KEY, ""))
+                .build())
 
         startActivity(BookDetailActivity.newIntent(context, book.id))
     }
 
     override fun bookActionClicked(position: Int) {
+        val book = adapter.items[position]
+        val shared = context.getSharedPreferences(SharedConstants.PREFERENCE_NAME, Context.MODE_PRIVATE)
+
+        val firebase = FirebaseAnalytics.getInstance(context);
+        val bundle = Bundle()
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, book.buttonTitle)
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "BookAction")
+        bundle.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, "Navigation")
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Button")
+        firebase.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
+        Log.d("FA","Sending firebase event")
+
+        val application = activity.application as KotApp
+        application.getDefaultTracker().send(HitBuilders.EventBuilder()
+                .setCategory("Navigation")
+                .setAction("Button")
+                .setLabel(book.buttonTitle)
+                .setCustomDimension(1, shared.getString(SharedConstants.EMAIL_KEY, ""))
+                .build())
+
         Toast.makeText(context, "Action button clicked", Toast.LENGTH_SHORT).show()
     }
 
@@ -176,6 +222,24 @@ class BookListFragment : AbstractFragment(), BookListListener, TabLayout.OnTabSe
     }
 
     override fun onTabSelected(tab: TabLayout.Tab?) {
+        val shared = context.getSharedPreferences(SharedConstants.PREFERENCE_NAME, Context.MODE_PRIVATE)
+        val firebase = FirebaseAnalytics.getInstance(context);
+        val bundle = Bundle()
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, tab?.text.toString())
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "TabSelection")
+        bundle.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, "Navigation")
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Tab")
+        firebase.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
+        Log.d("FA","Sending firebase event")
+
+        val application = activity.application as KotApp
+        application.getDefaultTracker().send(HitBuilders.EventBuilder()
+                .setCategory("Navigation")
+                .setAction("Tab")
+                .setLabel(tab?.text.toString())
+                .setCustomDimension(1, shared.getString(SharedConstants.EMAIL_KEY, ""))
+                .build())
+
         if (tab?.text.toString() == (getString(R.string.book_cat_all))) {
             getBookList()
         } else {
@@ -187,6 +251,24 @@ class BookListFragment : AbstractFragment(), BookListListener, TabLayout.OnTabSe
      * Other activity methods
      */
     private fun updateButtonFilter() {
+        val shared = context.getSharedPreferences(SharedConstants.PREFERENCE_NAME, Context.MODE_PRIVATE)
+        val firebase = FirebaseAnalytics.getInstance(context);
+        val bundle = Bundle()
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, if (filterValue == LIST_FILTER) "List" else "Grid")
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "FilterSelection")
+        bundle.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, "Navigation")
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Button")
+        firebase.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
+        Log.d("FA","Sending firebase event")
+
+        val application = activity.application as KotApp
+        application.getDefaultTracker().send(HitBuilders.EventBuilder()
+                .setCategory("Navigation")
+                .setAction("Button")
+                .setLabel(if (filterValue == LIST_FILTER) "List" else "Grid")
+                .setCustomDimension(1, shared.getString(SharedConstants.EMAIL_KEY, ""))
+                .build())
+
         if (filterValue == LIST_FILTER) {
             adapter?.isListView = true
             list.layoutManager = LinearLayoutManager(context)
@@ -205,6 +287,8 @@ class BookListFragment : AbstractFragment(), BookListListener, TabLayout.OnTabSe
     }
 
     private fun convertNetworkObjectToPojo(book: LibraryBook): BookSummary {
-        return BookSummary(book.id, book.title!!, book.author ?: getString(R.string.book_author_unknown), book.imagePath, false, getString(R.string.book_borrow))
+        val rand = Random()
+        val isBorrowed : Boolean = rand.nextBoolean()
+        return BookSummary(book.id, book.title!!, book.author ?: getString(R.string.book_author_unknown), book.imagePath, isBorrowed, if (isBorrowed) getString(R.string.book_return) else getString(R.string.book_borrow))
     }
 }

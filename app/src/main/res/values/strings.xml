@@ -8,7 +8,7 @@
     <string name="field_password">"Mot de passe"</string>
     <string name="field_password_confirm">"Confirmer mot de passe"</string>
     <string name="field_firstname">"Prénom"</string>
-    <string name="field_lasstname">"Nom"</string>
+    <string name="field_lastname">"Nom"</string>
     <string name="login_log_in">"Connexion"</string>
     <string name="create_account">"Créer un compte"</string>
     <string name="error_login_empty">"Veuillez renseigner votre identifiant"</string>
@@ -48,6 +48,12 @@
     <string name="book_author">"Auteur"</string>
     <string name="book_publish_date">"Date de parution"</string>
     <string name="book_categories">"Catégories"</string>
+
+    <!-- Profile -->
+    <string name="informations">"Informations"</string>
+    <string name="user_book_list">"Mes livres"</string>
+    <string name="profile_disconnect">"Déconnexion"</string>
+    <string name="profile_validate">"Valider les changements"</string>
 
     <!-- Common -->
     <string name="warning">"Avertissement</string>

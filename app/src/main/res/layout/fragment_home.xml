@@ -32,7 +32,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="@dimen/medium"
                 android:text="@string/home_book_button"
-                android:theme="@style/PositiveButton" />
+                android:theme="@style/ButtonTest" />
 
         </LinearLayout>
 
